@@ -1,0 +1,6 @@
+outs:
+- md5: 0a99224be0aabaade6996f4a96764766
+  size: 686174513
+  hash: md5
+  path: export.csv
+  remote: storage

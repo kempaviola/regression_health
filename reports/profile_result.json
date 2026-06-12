@@ -1,0 +1,272 @@
+{
+  "total_rows": 7976223,
+  "n_users": 42283,
+  "nulls": {
+    "user_id": 0,
+    "age": 309226,
+    "sex": 132135,
+    "country": 297985,
+    "checkin_date": 0,
+    "trackable_id": 0,
+    "trackable_type": 0,
+    "trackable_name": 0,
+    "trackable_value": 926855
+  },
+  "null_rate": {
+    "user_id": 0.0,
+    "age": 3.88,
+    "sex": 1.66,
+    "country": 3.74,
+    "checkin_date": 0.0,
+    "trackable_id": 0.0,
+    "trackable_type": 0.0,
+    "trackable_name": 0.0,
+    "trackable_value": 11.62
+  },
+  "type_counts": {
+    "Symptom": 3642279,
+    "Weather": 1393806,
+    "Condition": 1111517,
+    "Treatment": 901820,
+    "Food": 480971,
+    "Tag": 445669,
+    "HBI": 161
+  },
+  "sex_counts": {
+    "female": 6478402,
+    "male": 574907,
+    "other": 428312,
+    "doesnt_say": 362467
+  },
+  "country_top20": {
+    "US": 4690209,
+    "GB": 1230187,
+    "AU": 516700,
+    "CA": 497781,
+    "DE": 122995,
+    "NZ": 109121,
+    "NL": 72635,
+    "SE": 56823,
+    "FR": 37059,
+    "ZA": 33238,
+    "NO": 31681,
+    "FI": 28052,
+    "BE": 21321,
+    "IE": 19329,
+    "CH": 19108,
+    "DK": 15844,
+    "UM": 15006,
+    "IL": 8898,
+    "AT": 7954,
+    "UY": 7764
+  },
+  "n_countries": 164,
+  "age_pct": {
+    "n": 7666997,
+    "min": -196691.0,
+    "p5": 19.0,
+    "p25": 26.0,
+    "median": 34.0,
+    "mean": 35.07,
+    "p75": 43.0,
+    "p95": 56.0,
+    "max": 2018.0
+  },
+  "age_gt120": 431,
+  "age_neg": 38,
+  "age_zero_or_1": 4001,
+  "date_min": "2012-05-18 00:00:00",
+  "date_max": "2019-12-06 00:00:00",
+  "future_dates": 0,
+  "date_by_month_first6": {
+    "2012-05": 12,
+    "2012-08": 6,
+    "2012-12": 7,
+    "2013-01": 7,
+    "2013-02": 12,
+    "2013-05": 16
+  },
+  "date_by_month_last6": {
+    "2019-07": 275282,
+    "2019-08": 275139,
+    "2019-09": 272748,
+    "2019-10": 274195,
+    "2019-11": 254734,
+    "2019-12": 38144
+  },
+  "n_months": 68,
+  "symptom_value_hist": {
+    "0.0": 1129697,
+    "1.0": 894860,
+    "2.0": 802636,
+    "3.0": 519447,
+    "4.0": 295639
+  },
+  "symptom_value_pct": {
+    "n": 3642279,
+    "min": 0.0,
+    "p5": 0.0,
+    "p25": 0.0,
+    "median": 1.0,
+    "mean": 1.439,
+    "p75": 2.0,
+    "p95": 4.0,
+    "max": 4.0
+  },
+  "trackable_value_numeric_by_type": {
+    "Condition": {
+      "count": 1111517,
+      "min": 0.0,
+      "max": 4.0,
+      "neg": 0,
+      "zero": 255231,
+      "gt4": 0,
+      "mean": 1.699
+    },
+    "HBI": {
+      "count": 161,
+      "min": 0.0,
+      "max": 20.0,
+      "neg": 0,
+      "zero": 9,
+      "gt4": 96,
+      "mean": 5.733
+    },
+    "Symptom": {
+      "count": 3642279,
+      "min": 0.0,
+      "max": 4.0,
+      "neg": 0,
+      "zero": 1129697,
+      "gt4": 0,
+      "mean": 1.439
+    },
+    "Treatment": {
+      "count": 91646,
+      "min": 0.0,
+      "max": 40000.0,
+      "neg": 0,
+      "zero": 455,
+      "gt4": 30674,
+      "mean": 194.625
+    },
+    "Weather": {
+      "count": 1161300,
+      "min": -47.0,
+      "max": 1051.0,
+      "neg": 2042,
+      "zero": 48239,
+      "gt4": 925684,
+      "mean": 240.067
+    }
+  },
+  "trackable_value_nonnumeric_counts": {
+    "Treatment": 810174,
+    "Weather": 232291
+  },
+  "top_trackable_names": {
+    "Condition": {
+      "Fibromyalgia": 45254,
+      "Depression": 39108,
+      "Anxiety": 36093,
+      "Chronic fatigue syndrome": 20501,
+      "Migraine": 18498,
+      "IBS": 13065,
+      "Fatigue": 12193,
+      "Endometriosis": 11510,
+      "Asthma": 11441,
+      "Ehlers-Danlos syndrome": 10734,
+      "Generalized anxiety disorder": 8916,
+      "Irritable bowel syndrome": 8621,
+      "Headaches": 8368,
+      "Chronic Migraines": 8161,
+      "POTS": 7397
+    },
+    "Symptom": {
+      "Fatigue": 28990,
+      "Headache": 27665,
+      "Nausea": 22722,
+      "Joint pain": 19087,
+      "Brain fog": 18588,
+      "Anxiety": 16287,
+      "Fatigue and tiredness": 15407,
+      "Diarrhea": 13743,
+      "Dizziness": 13009,
+      "Depression": 12136,
+      "Constipation": 11040,
+      "Neck pain": 10846,
+      "Stomach Pain": 10711,
+      "Back pain": 10016,
+      "Abdominal pain": 9846
+    },
+    "Treatment": {
+      "Ibuprofen": 21484,
+      "Magnesium": 11417,
+      "Paracetamol": 11253,
+      "Vitamin D3": 11168,
+      "Vitamin d": 9867,
+      "Gabapentin": 9627,
+      "Tramadol": 9278,
+      "Prednisone": 8309,
+      "Naproxen": 8211,
+      "Omeprazole": 7552,
+      "Multivitamin": 7443,
+      "Probiotic": 6824,
+      "Amitriptyline": 6777,
+      "Plaquenil": 6666,
+      "Tylenol": 6355
+    },
+    "Tag": {
+      "tired": 10034,
+      "stressed": 5324,
+      "ate breakfast": 2745,
+      "walked": 2698,
+      "period": 2102,
+      "good sleep": 1942,
+      "dairy": 1286,
+      "had sex": 1039,
+      "alcohol": 949,
+      "gluten": 925,
+      "Went to work": 565,
+      "worked": 387,
+      "bad sleep": 358,
+      "exhausted": 317,
+      "pain": 294
+    },
+    "Food": {
+      "water": 3347,
+      "coffee": 2695,
+      "tea": 1415,
+      "banana": 907,
+      "chicken": 855,
+      "pizza": 757,
+      "sugar": 745,
+      "milk": 743,
+      "salad": 673,
+      "Chocolate": 494,
+      "Orange juice": 471,
+      "cereal": 430,
+      "cheese": 384,
+      "rice": 314,
+      "2 eggs": 313
+    },
+    "Weather": {
+      "humidity": 232301,
+      "icon": 232301,
+      "precip_intensity": 232301,
+      "pressure": 232301,
+      "temperature_max": 232301,
+      "temperature_min": 232301
+    }
+  },
+  "n_trackable_names_by_type": {
+    "Condition": 8453,
+    "Food": 8693,
+    "HBI": 1,
+    "Symptom": 9148,
+    "Tag": 9545,
+    "Treatment": 8155,
+    "Weather": 6
+  },
+  "elapsed_sec": 29.0
+}

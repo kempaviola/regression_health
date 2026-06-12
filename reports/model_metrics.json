@@ -1,0 +1,30 @@
+{
+  "n_modeling_rows": 214388,
+  "n_train": 128555,
+  "n_test": 85833,
+  "n_users_train": 9252,
+  "n_users_test": 5212,
+  "train_period": [
+    "2015-05-24",
+    "2018-12-31"
+  ],
+  "test_period": [
+    "2019-01-01",
+    "2019-12-05"
+  ],
+  "target_mean_train": 1.448,
+  "target_mean_test": 1.38,
+  "naive_baseline_rmse": 0.538,
+  "naive_baseline_mae": 0.3619,
+  "linreg_cv_rmse_grouped": 0.4796,
+  "linreg_cv_rmse_std": 0.0108,
+  "linreg_test_rmse": 0.471,
+  "linreg_test_mae": 0.3348,
+  "hgb_test_rmse": 0.468,
+  "H1_beats_naive": true,
+  "H1_improvement_pct": 12.44,
+  "H2_history_only_cv_rmse": 0.4799,
+  "H2_env_only_cv_rmse": 0.8318,
+  "H2_history_stronger_than_env": true,
+  "elapsed_sec": 10.1
+}

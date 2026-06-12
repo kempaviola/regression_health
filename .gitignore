@@ -1,0 +1,25 @@
+# --- raw data: tracked by DVC + references/data_source.md, never committed ---
+/export.csv
+/data/raw/
+*.csv
+!requirements.txt
+
+# DVC-managed large/derived data (keep the .dvc pointers, ignore the data)
+/data/interim/
+/data/processed/
+
+# --- python ---
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# --- notebooks: keep, but strip heavy outputs if desired ---
+# (outputs are kept here for review; clear with `jupyter nbconvert --clear-output`)
+
+# --- os / editor ---
+.DS_Store
+.vscode/
+.idea/
