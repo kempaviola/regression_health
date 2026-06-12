@@ -54,7 +54,17 @@ pip install -r requirements.txt
 python src/profile_data.py      # 1. profile the raw export (~30s)
 python src/build_panel.py       # 2. build the daily panel  (~30s)
 python src/make_features.py     # 3. target + split + CV + models (~10s)
+jupyter lab notebooks/01_exploratory_analysis.ipynb   # interactive EDA
 ```
+
+## Version control (git + DVC)
+Run once on your machine:
+```bash
+bash init_repo.sh               # cleans any sandbox-built .git, inits git + DVC
+```
+Raw `export.csv` (686 MB) is tracked by **DVC**, not git — git stores only the
+pointer `export.csv.dvc` (md5 `0a99224b…`). Point the `storage` remote at real
+storage and `dvc push`/`dvc pull` the bytes. Details in `references/data_source.md`.
 
 ## Methodology notes (ToU "Common Mistakes to Avoid")
 - **Split before preprocessing.** Imputation + scaling are fit on the training
