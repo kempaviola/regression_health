@@ -1,8 +1,8 @@
-# Data dictionary — Flaredown export
+# Data dictionary, Flaredown export
 
-**Source:** Flaredown Autoimmune Symptom Tracker — [Kaggle](https://www.kaggle.com/datasets/flaredown/flaredown-autoimmune-symptom-tracker?resource=download) (see `references/data_source.md`)
+**Source:** Flaredown Autoimmune Symptom Tracker, [Kaggle](https://www.kaggle.com/datasets/flaredown/flaredown-autoimmune-symptom-tracker?resource=download) (see `references/data_source.md`)
 **Source file:** `export.csv` (686 MB, 7,976,223 rows, 42,283 users)
-**Format:** long / "tidy event" — one row per `(user, date, trackable)` check-in entry.
+**Format:** long "tidy event", one row per `(user, date, trackable)` check-in entry.
 **Grain:** a single tracked item logged by one user on one day.
 **Coverage:** 2012-05-18 → 2019-12-06 (68 active months; volume concentrates 2017–2019).
 
@@ -33,7 +33,7 @@
 | HBI | 161 | Harvey-Bradshaw Index | 0–20 | negligible volume. |
 
 ## Known data-quality issues (see `reports/data_profile_report.md`)
-1. `age` has impossible values (negatives, years > 120) — 469 rows out of range → clip/null.
+1. `age` has impossible values (negatives, years > 120), 469 rows out of range → values outside [5,120] set to null in `build_panel.py`.
 2. `trackable_value` is type-dependent and mixed numeric/text → never pool across types.
 3. Weather is stored long with one variable per row → must pivot per `(user, date)`.
 4. `trackable_name` is messy free-text (e.g. "Vitamin D3" vs "Vitamin d") → standardize before name-level analysis.

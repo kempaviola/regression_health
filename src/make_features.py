@@ -6,7 +6,8 @@ runs grouped cross-validation, and tests hypothesis H1 against a naive baseline.
 Follows the ToU docs: 'Common Mistakes to Avoid', 'Why Split Data Properly',
 'Random vs Stratified vs Temporal Splitting', 'Cross-Validation Setup'.
 """
-import pandas as pd, numpy as np, json, time
+import pandas as pd, numpy as np, json, time, yaml
+from pathlib import Path
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
@@ -15,12 +16,15 @@ from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.model_selection import GroupKFold, cross_val_score
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-BASE="/sessions/dreamy-modest-euler/mnt/regression_health"
-PANEL=f"{BASE}/data/interim/daily_panel.csv.gz"
-SPLIT_DATE=pd.Timestamp("2019-01-01")   # temporal hold-out
+ROOT=Path(__file__).resolve().parents[1]
+CFG=yaml.safe_load((ROOT/"config"/"config.yml").read_text())
+PANEL=ROOT/CFG["interim_path"]
+SPLIT_DATE=pd.Timestamp(CFG["split_date"])   # temporal hold-out
+SEED=int(CFG["random_state"])
 t0=time.time()
 
 p=pd.read_csv(PANEL, parse_dates=["date"]).sort_values(["user_id","date"]).reset_index(drop=True)
+print(f"[features] panel rows loaded     : {len(p):,}  users {p['user_id'].nunique():,}")
 
 # --- lagged symptom history (within user, recorded-day order) : H1 features ---
 g=p.groupby("user_id")["sym_mean"]
@@ -36,6 +40,7 @@ p=p.merge(nxt,on=["user_id","date"],how="left")
 
 # keep rows with a known next-day target AND some symptom history today
 data=p[p["target"].notna() & p["sym_mean"].notna()].copy()
+print(f"[features] rows after target join: {len(data):,}  (dropped {len(p)-len(data):,} without next-day target or today's severity)")
 
 FEATURES=["sym_mean","lag1_sym","lag2_sym","lag3_sym","roll3_sym",
           "sym_count","cond_mean","treat_count","food_count","tag_count",
@@ -45,6 +50,7 @@ FEATURES=["sym_mean","lag1_sym","lag2_sym","lag3_sym","roll3_sym",
 # --- TEMPORAL split FIRST (before any fitting) : ToU 'split first' rule ---
 train=data[data["date"]<SPLIT_DATE].copy()
 test =data[data["date"]>=SPLIT_DATE].copy()
+print(f"[features] temporal split @ {SPLIT_DATE.date()} -> train {len(train):,} rows / test {len(test):,} rows")
 Xtr,ytr=train[FEATURES],train["target"]; Xte,yte=test[FEATURES],test["target"]
 
 # --- Naive baseline: 'tomorrow == today' (persistence) ---
@@ -65,7 +71,7 @@ cv_rmse=(-cv).mean(); cv_std=(-cv).std()
 # --- Fit on full train, evaluate on temporal test ---
 lin.fit(Xtr,ytr); lin_rmse=np.sqrt(mean_squared_error(yte,lin.predict(Xte)))
 lin_mae=mean_absolute_error(yte,lin.predict(Xte))
-hgb=HistGradientBoostingRegressor(random_state=42,max_iter=200)
+hgb=HistGradientBoostingRegressor(random_state=SEED,max_iter=200)
 hgb.fit(Xtr.fillna(Xtr.median()),ytr)
 hgb_rmse=np.sqrt(mean_squared_error(yte,hgb.predict(Xte.fillna(Xtr.median()))))
 
@@ -79,8 +85,9 @@ hist_rmse=block_rmse(HIST); env_rmse=block_rmse(ENV)
 
 # --- save processed splits + metrics ---
 keep=["user_id","date","target"]+FEATURES
-train[keep].to_csv(f"{BASE}/data/processed/train.csv.gz",index=False,compression="gzip")
-test[keep].to_csv(f"{BASE}/data/processed/test.csv.gz",index=False,compression="gzip")
+(ROOT/CFG["train_path"]).parent.mkdir(parents=True,exist_ok=True)
+train[keep].to_csv(ROOT/CFG["train_path"],index=False,compression="gzip")
+test[keep].to_csv(ROOT/CFG["test_path"],index=False,compression="gzip")
 metrics={
  "n_modeling_rows":len(data),"n_train":len(train),"n_test":len(test),
  "n_users_train":int(train["user_id"].nunique()),"n_users_test":int(test["user_id"].nunique()),
@@ -96,5 +103,6 @@ metrics={
  "H2_history_only_cv_rmse":round(hist_rmse,4),"H2_env_only_cv_rmse":round(env_rmse,4),
  "H2_history_stronger_than_env":bool(hist_rmse<env_rmse),
  "elapsed_sec":round(time.time()-t0,1)}
-json.dump(metrics,open(f"{BASE}/reports/model_metrics.json","w"),indent=2)
+(ROOT/CFG["metrics_json"]).parent.mkdir(parents=True,exist_ok=True)
+json.dump(metrics,open(ROOT/CFG["metrics_json"],"w"),indent=2)
 print(json.dumps(metrics,indent=2))

@@ -23,3 +23,6 @@ env/
 .DS_Store
 .vscode/
 .idea/
+
+# --- stray temp files (e.g. leftover atomic-write artifacts) ---
+*.tmp

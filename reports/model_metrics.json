@@ -20,11 +20,11 @@
   "linreg_cv_rmse_std": 0.0108,
   "linreg_test_rmse": 0.471,
   "linreg_test_mae": 0.3348,
-  "hgb_test_rmse": 0.468,
+  "hgb_test_rmse": 0.4678,
   "H1_beats_naive": true,
   "H1_improvement_pct": 12.44,
   "H2_history_only_cv_rmse": 0.4799,
-  "H2_env_only_cv_rmse": 0.8318,
+  "H2_env_only_cv_rmse": 0.8317,
   "H2_history_stronger_than_env": true,
-  "elapsed_sec": 10.1
+  "elapsed_sec": 7.0
 }

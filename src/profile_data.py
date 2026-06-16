@@ -1,7 +1,12 @@
-import pandas as pd, numpy as np, json, time
+import pandas as pd, numpy as np, json, time, yaml
+from pathlib import Path
 from collections import Counter, defaultdict
-PATH="/sessions/dreamy-modest-euler/mnt/regression_health/export.csv"
-TODAY=pd.Timestamp("2026-06-12"); CHUNK=1_000_000
+ROOT=Path(__file__).resolve().parents[1]
+CFG=yaml.safe_load((ROOT/"config"/"config.yml").read_text())
+PATH=ROOT/CFG["raw_path"]
+OUT=ROOT/CFG["profile_json"]
+TODAY=pd.Timestamp.now().normalize()   # flag any check-in dated after today
+CHUNK=int(CFG["chunk_size"])
 cols=["user_id","age","sex","country","checkin_date","trackable_id","trackable_type","trackable_name","trackable_value"]
 t0=time.time()
 total=0; nulls=Counter(); user_ids=set(); countries=set()
@@ -93,5 +98,6 @@ for t in ["Condition","Symptom","Treatment","Tag","Food","Weather"]:
 out["top_trackable_names"]=tn
 out["n_trackable_names_by_type"]={t:len(c) for t,c in names_by_type.items()}
 out["elapsed_sec"]=round(time.time()-t0,1)
-json.dump(out,open("/sessions/dreamy-modest-euler/mnt/outputs/profile_result.json","w"),indent=2,default=str)
-print("DONE",total,"rows",len(user_ids),"users",out["elapsed_sec"],"s")
+OUT.parent.mkdir(parents=True,exist_ok=True)
+json.dump(out,open(OUT,"w"),indent=2,default=str)
+print("DONE",total,"rows",len(user_ids),"users",out["elapsed_sec"],"s ->",OUT)

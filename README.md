@@ -1,78 +1,91 @@
-# regression_health — predicting next-day symptom severity
+# regression_health, predicting next-day symptom severity
 
-**Data source:** Flaredown Autoimmune Symptom Tracker — [Kaggle](https://www.kaggle.com/datasets/flaredown/flaredown-autoimmune-symptom-tracker?resource=download) (provenance & download in `references/data_source.md`).
+**Data source.** Flaredown Autoimmune Symptom Tracker, [Kaggle](https://www.kaggle.com/datasets/flaredown/flaredown-autoimmune-symptom-tracker?resource=download). Provenance and download steps live in `references/data_source.md`.
 
-Predicting **next-day symptom severity** for people with autoimmune conditions
-(rheumatoid arthritis, lupus, Crohn's, etc.) from data they already self-track:
-recent symptoms, treatments, food, tags, and weather. The aim is to support a
-shift from reactive to **preventive** self-management.
+The project predicts next-day symptom severity for people with autoimmune
+conditions such as rheumatoid arthritis, lupus, and Crohn's, using data they
+already self-track. The inputs are recent symptoms, treatments, food, tags, and
+weather. The aim is to support a shift from reactive toward preventive
+self-management. A one-screen summary of every fixed decision is in
+`reports/project_overview.md`.
 
-**Target:** `target` = the next calendar day's mean symptom severity (Flaredown's
-`trackable_value`, ordinal 0–4) → a legitimate regression target.
+**Target.** `target` is the next calendar day's mean symptom severity, taken from
+Flaredown's `trackable_value`, an ordinal 0-4 scale, used as a regression target.
 
 **Hypotheses**
-- **H1** — a model using lagged symptom, treatment and environmental features
-  predicts next-day severity **better than a naive "tomorrow = today" baseline.**
-- **H2** — recent symptom activity is a **stronger** predictor than environmental
-  triggers (weather): the disease's own momentum matters more than the weather.
+- **H1.** A model using lagged symptom, treatment, and environmental features
+  predicts next-day severity better than a naive "tomorrow equals today" baseline.
+- **H2.** Recent symptom activity is a stronger predictor than environmental
+  triggers, so the disease's own momentum matters more than the weather.
 
 ## Result (this build)
 | Model | Test RMSE (2019 hold-out) |
 |---|---|
 | Naive baseline (today's severity) | 0.538 |
-| Linear regression | **0.471** (−12.4%) → **H1 supported** |
+| Linear regression | **0.471** (−12% vs naive), H1 supported |
 | HistGradientBoosting | 0.468 |
 
-H2 probe (grouped-CV RMSE): symptom history **0.48** vs environment-only **0.83**
-→ **H2 supported** — history dominates weather.
+H2 probe (grouped-CV RMSE), symptom history **0.48** against environment-only
+**0.83**, so H2 is supported and history dominates weather.
 
-## Project layout (per ToU "How to Organize Locally")
+## Project layout
 ```
 regression_health/
 ├── export.csv                 # raw Flaredown export (686 MB, 7.98M rows)
+├── config/config.yml          # paths, random seed, run parameters (no hardcoded paths)
 ├── data/
 │   ├── raw/                   # immutable source
 │   ├── interim/               # daily_panel.csv.gz  (one row per user-day)
 │   └── processed/             # train.csv.gz, test.csv.gz (leakage-safe split)
 ├── src/
-│   ├── profile_data.py        # chunked data profiler  → reports/profile_result.json
-│   ├── build_panel.py         # long → daily user-day panel
+│   ├── profile_data.py        # chunked data profiler  -> reports/profile_result.json
+│   ├── build_panel.py         # long -> daily user-day panel (structural cleaning)
 │   └── make_features.py       # target, split, CV, models, metrics
 ├── reports/
-│   ├── data_profile_report.md # the /explore-data deliverable
+│   ├── project_overview.md    # one-screen project record + limitations
+│   ├── data_profile_report.md # data exploration deliverable
 │   ├── profile_result.json    # machine-readable profile
 │   ├── model_metrics.json     # H1/H2 results
-│   └── figures/               # charts
+│   └── figures/               # charts, including residual diagnostics
 ├── references/data_dictionary.md
 ├── requirements.txt
-└── notebooks/                 # for exploratory analysis
+└── notebooks/                 # interactive exploratory analysis
 ```
 
 ## How to run
+Every path is read from `config/config.yml` and resolved relative to the
+repository root, so the scripts run from a fresh clone without edits.
 ```bash
 pip install -r requirements.txt
-python src/profile_data.py      # 1. profile the raw export (~30s)
-python src/build_panel.py       # 2. build the daily panel  (~30s)
-python src/make_features.py     # 3. target + split + CV + models (~10s)
+python src/profile_data.py      # 1. profile the raw export (~20s) -> reports/profile_result.json
+python src/build_panel.py       # 2. structural cleaning + daily panel (~20s)
+python src/make_features.py     # 3. target, temporal split, grouped CV, models, metrics (~10s)
 jupyter lab notebooks/01_exploratory_analysis.ipynb   # interactive EDA
 ```
+Each script prints before-and-after counts for every transformation, so the run
+is auditable end to end.
 
 ## Version control (git + DVC)
-Run once on your machine:
+Run once on your machine.
 ```bash
 bash init_repo.sh               # cleans any sandbox-built .git, inits git + DVC
 ```
-Raw `export.csv` (686 MB) is tracked by **DVC**, not git — git stores only the
-pointer `export.csv.dvc` (md5 `0a99224b…`). Point the `storage` remote at real
-storage and `dvc push`/`dvc pull` the bytes. Details in `references/data_source.md`.
+The raw `export.csv` (686 MB) is tracked by **DVC**, not git, so git stores only
+the pointer `export.csv.dvc` (md5 `0a99224b…`). Point the `storage` remote at
+real storage and use `dvc push` and `dvc pull` for the bytes. Details are in
+`references/data_source.md`.
 
-## Methodology notes (ToU "Common Mistakes to Avoid")
-- **Split before preprocessing.** Imputation + scaling are fit on the training
-  split only and applied to test via an sklearn `Pipeline` — no leakage.
-- **Temporal split** (train < 2019-01-01, test ≥ 2019-01-01): honest simulation
-  of predicting the future, and it respects the time-ordered nature of the data.
-- **Grouped cross-validation** (`GroupKFold` on `user_id`): no user appears in
-  both train and validation folds, so the score isn't inflated by memorizing
+## Methodology notes
+- **Structural before statistical.** Duplicate removal, date validation, and the
+  impossible-age fix happen in `build_panel.py` before the split. Imputation and
+  scaling are fit on the training split only and applied to test through an
+  sklearn `Pipeline`, so no test information leaks into training.
+- **Temporal split** (train before 2019-01-01, test on or after) gives an honest
+  simulation of predicting the future and respects the time-ordered data.
+- **Grouped cross-validation** (`GroupKFold` on `user_id`) keeps any one user out
+  of both train and validation folds, so the score is not inflated by memorising
   individual patients.
-- **Naive baseline** is reported alongside every model so "good RMSE" is always
-  judged against "tomorrow = today", which is what makes H1 testable.
+- **Naive baseline** is reported beside every model, so a "good RMSE" is always
+  judged against "tomorrow equals today", which is what makes H1 testable.
+- **Limitations** including the temporal-versus-grouped straddle and the deferred
+  `trackable_name` standardisation are recorded in `reports/project_overview.md`.

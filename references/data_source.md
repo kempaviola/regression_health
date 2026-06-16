@@ -1,19 +1,19 @@
 # Data source
 
 **Dataset:** Flaredown Autoimmune Symptom Tracker
-**Source:** Kaggle — https://www.kaggle.com/datasets/flaredown/flaredown-autoimmune-symptom-tracker?resource=download
+**Source:** Kaggle, https://www.kaggle.com/datasets/flaredown/flaredown-autoimmune-symptom-tracker?resource=download
 **Provider:** Flaredown (patient symptom-tracking app)
-**File used:** `export.csv` — 686 MB, 7,976,223 rows, 42,283 users, 2012-05-18 → 2019-12-06
-**Format:** long / event log — one row per `(user, date, trackable item)`
+**File used:** `export.csv`, 686 MB, 7,976,223 rows, 42,283 users, 2012-05-18 → 2019-12-06
+**Format:** long event log, one row per `(user, date, trackable item)`
 **License:** see the Kaggle dataset page for current license & terms before redistribution.
 
 ## Download
 ```bash
-# Option A — Kaggle CLI (requires ~/.kaggle/kaggle.json API token)
+# Option A, Kaggle CLI (requires ~/.kaggle/kaggle.json API token)
 kaggle datasets download -d flaredown/flaredown-autoimmune-symptom-tracker
 unzip flaredown-autoimmune-symptom-tracker.zip -d data/raw/
 
-# Option B — manual
+# Option B, manual
 # Download from the URL above and place export.csv in data/raw/
 ```
 
@@ -40,8 +40,8 @@ dvc add export.csv && dvc push
 git clone <repo> && cd regression_health && dvc pull
 ```
 
-The default remote in `.dvc/config` is a **placeholder** (`/path/to/your/dvc-storage`) —
-repoint it before `dvc push`.
+The default remote in `.dvc/config` is a **placeholder** (`/path/to/your/dvc-storage`),
+so repoint it before `dvc push`.
 
 ## Notes
 - Treat `export.csv` as immutable; all derived data lives in `data/interim/` and

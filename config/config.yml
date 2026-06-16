@@ -1,0 +1,26 @@
+# regression_health configuration
+# Template Part A.3 keeps paths, the random seed, and run parameters in one place
+# rather than scattered as hardcoded literals. Every path below is relative to the
+# repository root, which each script resolves from its own location, so the project
+# runs unchanged on any machine.
+
+# --- paths (relative to repo root) ---
+raw_path: export.csv
+interim_path: data/interim/daily_panel.csv.gz
+train_path: data/processed/train.csv.gz
+test_path: data/processed/test.csv.gz
+profile_json: reports/profile_result.json
+metrics_json: reports/model_metrics.json
+figures_dir: reports/figures
+
+# --- reproducibility ---
+random_state: 42
+
+# --- run parameters ---
+chunk_size: 1000000        # rows per streaming chunk for the 7.98M-row raw export
+split_date: "2019-01-01"   # temporal hold-out boundary (train < date, test >= date)
+test_size: 0.2             # reference only; the temporal split uses split_date
+
+# --- structural cleaning bounds ---
+age_min: 5                 # below this is an impossible self-tracking age
+age_max: 120               # above this is a data-entry error (raw range reaches 2018)
