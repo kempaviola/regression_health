@@ -268,5 +268,40 @@
     "Treatment": 8155,
     "Weather": 6
   },
-  "elapsed_sec": 17.5
+  "n_users_with_condition": 38308,
+  "condition_prevalence_users": {
+    "Fibromyalgia": 7797,
+    "Depression": 5142,
+    "Anxiety": 4771,
+    "Chronic fatigue syndrome": 3002,
+    "Migraine": 2727,
+    "Fatigue": 2454,
+    "Endometriosis": 2304,
+    "IBS": 2181,
+    "Ehlers-Danlos syndrome": 1934,
+    "Asthma": 1641,
+    "Headaches": 1407,
+    "Chronic Migraines": 1361,
+    "joint pain": 1259,
+    "Chronic Pain": 1228,
+    "Generalized anxiety disorder": 1225
+  },
+  "condition_cooccurrence_users": {
+    "Anxiety + Depression": 2819,
+    "Depression + Fibromyalgia": 1558,
+    "Anxiety + Fibromyalgia": 1352,
+    "Chronic fatigue syndrome + Fibromyalgia": 1177,
+    "Fibromyalgia + Migraine": 860,
+    "Fibromyalgia + IBS": 834,
+    "Chronic fatigue syndrome + Depression": 677,
+    "Depression + Migraine": 656,
+    "Anxiety + Migraine": 616,
+    "Depression + Generalized anxiety disorder": 559,
+    "Anxiety + Chronic fatigue syndrome": 553,
+    "Anxiety + IBS": 545,
+    "Depression + IBS": 543,
+    "Chronic Migraines + Fibromyalgia": 509,
+    "Asthma + Fibromyalgia": 481
+  },
+  "elapsed_sec": 18.6
 }

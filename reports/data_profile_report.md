@@ -10,7 +10,7 @@
 | Rows | **7,976,223** |
 | Users | **42,283** |
 | Columns | 9 (1 id, 4 demographic/temporal, 4 trackable fields) |
-| Grain | one row per `(user, date, trackable item)` — long / event format |
+| Grain | one row per `(user, date, trackable item)`, long / event format |
 | Date range | **2012-05-18 → 2019-12-06** (68 active months) |
 | Volume | concentrated 2017–2019 (~275k user-days/month by 2019) |
 | File size | 686 MB |
@@ -27,7 +27,7 @@ weather variables). Stage 1 of the pipeline (`build_panel.py`) collapses it to
 | Column | Class | Null % | Distinct | Notes |
 |---|---|---|---|---|
 | `user_id` | identifier | 0.0 | 42,283 | hashed; grouping key for CV |
-| `age` | metric (dirty) | 3.9 | — | **range −196,691 … 2,018** → garbage; median 34 |
+| `age` | metric (dirty) | 3.9 | n/a | **range −196,691 … 2,018** → garbage; median 34 |
 | `sex` | dimension | 1.7 | 4 | female 81%, male 7%, other 5%, doesnt_say 5% |
 | `country` | dimension | 3.7 | 164 | US 59%, GB 15%, AU 6%, CA 6% |
 | `checkin_date` | temporal | 0.0 | 68 months | no future dates; no gaps in monthly coverage post-2016 |
@@ -51,7 +51,7 @@ a naive baseline is already fairly strong.
 | Symptom | 3,642,279 | severity 0–4 | **target** + lagged history |
 | Weather | 1,393,806 | one variable per row (temp, humidity, pressure, precip, `icon`) | pivot → wide daily weather |
 | Condition | 1,111,517 | condition severity 0–4 (mean 1.70) | daily condition load |
-| Treatment | 901,820 | dose — **90% text** ("200mg"); only 91,646 numeric | daily treatment **count** |
+| Treatment | 901,820 | dose, **90% text** ("200mg"); only 91,646 numeric | daily treatment **count** |
 | Food | 480,971 | (no value) | daily food count |
 | Tag | 445,669 | (no value) | daily tag count |
 | HBI | 161 | Harvey-Bradshaw Index 0–20 | negligible |

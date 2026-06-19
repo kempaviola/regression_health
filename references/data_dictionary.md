@@ -11,14 +11,14 @@
 | Column | Type | Description | Notes |
 |---|---|---|---|
 | `user_id` | string (hashed) | Anonymous user identifier | 0% null; FK / grouping key. 42,283 distinct. |
-| `age` | int (dirty) | Self-reported age | 3.9% null; **contains garbage** (min −196,691, max 2,018 — birth years and typos). Clip to [5,120]. |
+| `age` | int (dirty) | Self-reported age | 3.9% null; **contains garbage** (min −196,691, max 2,018: birth years and typos). Clip to [5,120]. |
 | `sex` | category | female / male / other / doesnt_say | 1.7% null; 81% female (autoimmune skew). |
 | `country` | category | ISO-2 country code | 3.7% null; 164 values; US 59%, GB 15%, AU/CA next. |
 | `checkin_date` | date | Day of the check-in | 0% null; no future dates. |
 | `trackable_id` | int | Internal id of the tracked item | 0% null; not used for modeling. |
 | `trackable_type` | category | Kind of entry | Symptom, Weather, Condition, Treatment, Food, Tag, HBI. |
 | `trackable_name` | string | Name of the tracked item | 0% null; free-text, high cardinality (8–9k distinct per type). |
-| `trackable_value` | mixed | Value of the entry — **meaning depends on `trackable_type`** | 11.6% null (Tag/Food carry no value). |
+| `trackable_value` | mixed | Value of the entry; **meaning depends on `trackable_type`** | 11.6% null (Tag/Food carry no value). |
 
 ## What `trackable_value` means per `trackable_type`
 
@@ -28,8 +28,8 @@
 | Weather | 1,393,806 | reading; `trackable_name` ∈ {temperature_max/min, humidity, pressure, precip_intensity, icon} | varies | long-format; `icon` is text. Pivot to wide before use. |
 | Condition | 1,111,517 | condition severity 0–4 | 0–4 | mean 1.70. |
 | Treatment | 901,820 | dose | mostly **text** ("200mg"); 90% non-numeric | count of treatments/day is the usable signal. |
-| Food | 480,971 | — | null | name only; use daily count. |
-| Tag | 445,669 | — | null | free-text lifestyle tags; use daily count. |
+| Food | 480,971 | n/a | null | name only; use daily count. |
+| Tag | 445,669 | n/a | null | free-text lifestyle tags; use daily count. |
 | HBI | 161 | Harvey-Bradshaw Index | 0–20 | negligible volume. |
 
 ## Known data-quality issues (see `reports/data_profile_report.md`)

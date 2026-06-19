@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Initialize git + DVC for regression_health on your local machine.
 # (The project was assembled in a sandbox whose filesystem can't host a git repo,
-#  so a partial `.git/` may exist — this script removes and recreates it cleanly.)
+#  so a partial `.git/` may exist, so this script removes and recreates it cleanly.)
 set -euo pipefail
 cd "$(dirname "$0")"
 

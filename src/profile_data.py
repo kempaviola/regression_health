@@ -1,6 +1,7 @@
 import pandas as pd, numpy as np, json, time, yaml
 from pathlib import Path
 from collections import Counter, defaultdict
+from itertools import combinations
 ROOT=Path(__file__).resolve().parents[1]
 CFG=yaml.safe_load((ROOT/"config"/"config.yml").read_text())
 PATH=ROOT/CFG["raw_path"]
@@ -15,6 +16,7 @@ names_by_type=defaultdict(Counter)
 age_hist=Counter()
 date_min=None; date_max=None; future=0; date_month=Counter()
 sym_hist=Counter()                      # Symptom trackable_value histogram (target source)
+user_conditions=defaultdict(set)        # user_id -> set of Condition names (for prevalence + co-occurrence)
 # numeric tv aggregates per type
 tv_agg=defaultdict(lambda:{"count":0,"min":np.inf,"max":-np.inf,"neg":0,"zero":0,"gt4":0,"sum":0.0,"hist":Counter()})
 tv_nonnum=Counter()
@@ -55,6 +57,10 @@ for chunk in pd.read_csv(PATH,chunksize=CHUNK,dtype=str,keep_default_na=False,na
         if len(ai): d2["hist"].update(pd.Series(ai).round(2).value_counts().to_dict())
     sym=num[num["t"]=="Symptom"]["num"]
     if len(sym): sym_hist.update(sym.round(2).value_counts().to_dict())
+    # accumulate each user's set of conditions (a single user may span chunks)
+    cond=chunk[(chunk["trackable_type"]=="Condition")].dropna(subset=["user_id","trackable_name"])
+    for uid,names in cond.groupby("user_id")["trackable_name"]:
+        user_conditions[uid].update(names.unique())
     nonnum=df[df["num"].isna() & df["raw"].notna()]
     tv_nonnum.update(nonnum["t"].value_counts().to_dict())
 
@@ -97,6 +103,22 @@ for t in ["Condition","Symptom","Treatment","Tag","Food","Weather"]:
     if t in names_by_type: tn[t]=dict(names_by_type[t].most_common(15))
 out["top_trackable_names"]=tn
 out["n_trackable_names_by_type"]={t:len(c) for t,c in names_by_type.items()}
+# condition prevalence (distinct users per condition) and co-occurrence among the
+# 15 most prevalent conditions. Row counts (above) overweight heavy daily loggers;
+# prevalence counts each user once, which is the comparable cohort size.
+cond_users=Counter()
+for names in user_conditions.values():
+    cond_users.update(names)
+TOPK=15
+top_cond=[name for name,_ in cond_users.most_common(TOPK)]
+top_set=set(top_cond)
+pairs=Counter()
+for names in user_conditions.values():
+    present=sorted(names & top_set)
+    pairs.update(combinations(present,2))
+out["n_users_with_condition"]=len(user_conditions)
+out["condition_prevalence_users"]=dict(cond_users.most_common(TOPK))
+out["condition_cooccurrence_users"]={f"{a} + {b}":n for (a,b),n in pairs.most_common(15)}
 out["elapsed_sec"]=round(time.time()-t0,1)
 OUT.parent.mkdir(parents=True,exist_ok=True)
 json.dump(out,open(OUT,"w"),indent=2,default=str)
