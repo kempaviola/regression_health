@@ -26,3 +26,6 @@ env/
 
 # --- stray temp files (e.g. leftover atomic-write artifacts) ---
 *.tmp
+
+# --- packaged exports ---
+*.zip

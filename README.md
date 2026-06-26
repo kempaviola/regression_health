@@ -89,3 +89,22 @@ real storage and use `dvc push` and `dvc pull` for the bytes. Details are in
   judged against "tomorrow equals today", which is what makes H1 testable.
 - **Limitations** including the temporal-versus-grouped straddle and the deferred
   `trackable_name` standardisation are recorded in `reports/project_overview.md`.
+
+## Submission
+
+This project is submitted as a single compressed folder, `regression-project-viola.zip`.
+The capstone notebook is `notebooks/Viola_regression_capstone.ipynb`, which holds the
+problem framing, data understanding, modelling, evaluation, diagnostics, and the
+change-based analysis in Section 10. The stakeholder impact report (Milestone 7) is the
+separate `notebooks/viola_impact_report.ipynb`.
+
+The zip excludes the virtual environment (`.venv/`) and the 686 MB raw `export.csv`, which
+is not redistributed; the derived `data/processed/` and `data/interim/` files are included
+so both notebooks run, and `references/data_source.md` plus the in-notebook access section
+explain how to fetch the raw file. To rebuild the zip from the parent directory:
+
+```bash
+zip -r -y regression-project-viola.zip regression_health \
+  -x '*/.venv/*' '*/export.csv' '*/data/raw/*' '*/.git/*' \
+     '*__pycache__*' '*.ipynb_checkpoints*' '*/.dvc/cache/*' '*/.dvc/tmp/*'
+```
