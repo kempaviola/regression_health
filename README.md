@@ -60,7 +60,7 @@ pip install -r requirements.txt
 python src/profile_data.py      # 1. profile the raw export (~20s) -> reports/profile_result.json
 python src/build_panel.py       # 2. structural cleaning + daily panel (~20s)
 python src/make_features.py     # 3. target, temporal split, grouped CV, models, metrics (~10s)
-jupyter lab notebooks/01_exploratory_analysis.ipynb   # interactive EDA
+jupyter lab notebooks/Viola_regression_capstone.ipynb   # full capstone analysis
 ```
 Each script prints before-and-after counts for every transformation, so the run
 is auditable end to end.
@@ -94,9 +94,10 @@ real storage and use `dvc push` and `dvc pull` for the bytes. Details are in
 
 This project is submitted as a single compressed folder, `regression-project-viola.zip`.
 The capstone notebook is `notebooks/Viola_regression_capstone.ipynb`, which holds the
-problem framing, data understanding, modelling, evaluation, diagnostics, and the
-change-based analysis in Section 10. The stakeholder impact report (Milestone 7) is the
-separate `notebooks/viola_impact_report.ipynb`.
+problem framing, data understanding, modelling, evaluation, diagnostics, the
+change-based analysis in Section 10, and the stakeholder impact report (Milestone 7)
+in Section 11. The impact report is also kept as a standalone copy in
+`notebooks/viola_impact_report.ipynb`.
 
 The zip excludes the virtual environment (`.venv/`) and the 686 MB raw `export.csv`, which
 is not redistributed; the derived `data/processed/` and `data/interim/` files are included
